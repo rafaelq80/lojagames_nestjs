@@ -55,9 +55,9 @@ export class ProdutoService {
 
     async update(produto: Produto): Promise<Produto> {
         
-        let prod = await this.findOneById(produto.id);
+        let buscaProduto = await this.findOneById(produto.id);
 
-        if (prod === undefined)
+        if (!buscaProduto || !produto.id)
             throw new HttpException('Produto não encontrado!', HttpStatus.NOT_FOUND);
         
         return await this.produtoRepository.save(produto);
@@ -65,7 +65,10 @@ export class ProdutoService {
 
     async delete(id: number): Promise<DeleteResult> {
         
-        let produto = await this.findOneById(id);
+        let buscaProduto = await this.findOneById(id);
+
+        if (!buscaProduto)
+            throw new HttpException('Produto não encontrado!', HttpStatus.NOT_FOUND);
 
         return await this.produtoRepository.delete(id);
 

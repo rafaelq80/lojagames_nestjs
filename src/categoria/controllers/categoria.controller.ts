@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, HttpCode, HttpStatus, Param, Body, HttpException } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
 import { Categoria } from "../entities/categoria.entity";
 import { CategoriaService } from "../services/categoria.service";
 
@@ -38,14 +38,8 @@ export class CategoriaController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id') id: number) {
-    const resultadoDelete = this.categoriaService.delete(id);
-    
-    if (resultadoDelete === undefined)
-        throw new HttpException('Categoria não encontrada!', HttpStatus.NOT_FOUND);
-    else
-        return resultadoDelete;
-
+  delete(@Param('id', ParseIntPipe) id: number) {
+   return this.categoriaService.delete(id)
   }
 
 }

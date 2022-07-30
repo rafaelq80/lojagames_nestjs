@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, HttpCode, HttpStatus, Param, Body, HttpException } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
 import { Produto } from "../entities/produto.entity";
 import { ProdutoService } from "../services/produto.service";
 
@@ -38,14 +38,8 @@ export class ProdutoController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id') id: number) {
-    const resultadoDelete = this.produtoService.delete(id);
-    
-    if (resultadoDelete === undefined)
-        throw new HttpException('Produto não encontrado!', HttpStatus.NOT_FOUND);
-    else
-        return resultadoDelete;
-
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.produtoService.delete(id);
   }
 
   @Get('/preco_maior/:preco')

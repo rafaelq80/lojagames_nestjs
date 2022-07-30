@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, Like, Repository } from "typeorm";
+import { DeleteResult, ILike, Like, Repository } from "typeorm";
 import { Categoria } from "../entities/categoria.entity";
 
 @Injectable()
@@ -41,7 +41,7 @@ export class CategoriaService {
     async findByTipo(tipo: string): Promise<Categoria[]> {
         return await this.categoriaRepository.find({
             where: {
-                tipo: Like(`%${tipo}%`)
+                tipo: ILike(`%${tipo}%`)
             },
             relations: {
                 produto: true
@@ -55,9 +55,9 @@ export class CategoriaService {
 
     async update(categoria: Categoria): Promise<Categoria> {
         
-        let cat = await this.findOneById(categoria.id);
+        let buscaCategoria = await this.findOneById(categoria.id);
 
-        if (cat === undefined)
+        if (!buscaCategoria || !categoria.id)
             throw new HttpException('Categoria não encontrada!', HttpStatus.NOT_FOUND);
         
         return await this.categoriaRepository.save(categoria);
@@ -65,7 +65,10 @@ export class CategoriaService {
 
     async delete(id: number): Promise<DeleteResult> {
         
-        let categoria = await this.findOneById(id);
+        let buscaCategoria = await this.findOneById(id);
+
+        if (!buscaCategoria)
+            throw new HttpException('Categoria não encontrada!', HttpStatus.NOT_FOUND);
 
         return await this.categoriaRepository.delete(id);
 
