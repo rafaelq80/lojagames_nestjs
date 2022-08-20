@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from '../entities/usuario.entity';
 import { Bcrypt } from '../../auth/bcrypt/bcrypt';
+import moment from 'moment';
 
 @Injectable()
 export class UsuarioService {
@@ -23,7 +24,7 @@ export class UsuarioService {
     async findAll(): Promise<Usuario[]> {
         return await this.usuarioRepository.find(
             {
-                relations:{
+                relations: {
                     postagem: true
                 }
             }
@@ -50,12 +51,17 @@ export class UsuarioService {
     }
 
     async create(usuario: Usuario): Promise<Usuario> {
-        
+
         let buscaUsuario = await this.findByUsuario(usuario.usuario);
 
         if (!buscaUsuario) {
+
+            if (this.calcularIdade(usuario.dataNascimento) < 18)
+                throw new HttpException('Usuário menor de idade!', HttpStatus.BAD_REQUEST);
+
             usuario.senha = await this.bcrypt.criptografarSenha(usuario.senha)
             return await this.usuarioRepository.save(usuario);
+
         }
 
         throw new HttpException("O Usuario ja existe!", HttpStatus.BAD_REQUEST);
@@ -78,4 +84,12 @@ export class UsuarioService {
 
     }
 
+    public calcularIdade(dataNascimento: any): number {
+
+        var agora = moment(new Date()); 
+        var aniversario = moment(dataNascimento.split('-'));
+        var idade = agora.diff(aniversario, 'years');
+
+        return idade;
+    }
 }
