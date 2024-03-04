@@ -13,7 +13,7 @@ import { ProdutoModule } from './produto/produto.module';
       port: 3306,
       username: 'root',
       password: 'root',
-      database: 'db_lojagames',
+      database: 'db_lojagames_new',
       entities: [Produto, Categoria],
       synchronize: true,
     }),

@@ -12,20 +12,6 @@ export class Produto {
     @Column({length: 255, nullable: false})
     nome: string
 
-    @IsNotEmpty()
-    @Column({length: 500, nullable: false})
-    descricao: string
-
-    @IsNotEmpty()
-    @Column({length: 100, nullable: false})
-    console: string
-
-    @Column({type: "int"})
-    quantidade: number
-
-    @Column({name: "data_lancamento", type: "date"})
-    dataLancamento: Date
-
     @Column({type: "decimal", precision: 10, scale: 2 })
     preco: number
 

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
 import { DeleteResult, ILike, Like, Repository } from "typeorm";
 import { Categoria } from "../entities/categoria.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class CategoriaService {
@@ -20,7 +20,7 @@ export class CategoriaService {
         );
     }
 
-    async findOneById(id: number): Promise<Categoria> {
+    async findById(id: number): Promise<Categoria> {
 
         let categoria = await this.categoriaRepository.findOne({
             where: {
@@ -55,7 +55,7 @@ export class CategoriaService {
 
     async update(categoria: Categoria): Promise<Categoria> {
         
-        let buscaCategoria = await this.findOneById(categoria.id);
+        let buscaCategoria = await this.findById(categoria.id);
 
         if (!buscaCategoria || !categoria.id)
             throw new HttpException('Categoria não encontrada!', HttpStatus.NOT_FOUND);
@@ -65,7 +65,7 @@ export class CategoriaService {
 
     async delete(id: number): Promise<DeleteResult> {
         
-        let buscaCategoria = await this.findOneById(id);
+        let buscaCategoria = await this.findById(id);
 
         if (!buscaCategoria)
             throw new HttpException('Categoria não encontrada!', HttpStatus.NOT_FOUND);

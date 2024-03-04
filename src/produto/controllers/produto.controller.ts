@@ -15,7 +15,7 @@ export class ProdutoController {
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   findById(@Param('id') id: number): Promise<Produto> {
-    return this.produtoService.findOneById(id);
+    return this.produtoService.findById(id);
   }
 
   @Get('/nome/:nome')
